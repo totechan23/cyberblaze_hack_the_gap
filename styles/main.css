@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+button {
+  background: #2563eb;
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  margin: 5px 0;
+}
+
+.container {
+  padding: 20px;
+}
