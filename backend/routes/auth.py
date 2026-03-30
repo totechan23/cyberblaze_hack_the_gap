@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from database.db import get_db
-from database.models import UserDB
+users_db = []
 
 router = APIRouter()
 
