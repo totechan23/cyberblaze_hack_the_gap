@@ -1,26 +1,49 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from config import config
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-from routes import auth, complaint, sos, ai, employee
+app = Flask(__name__)
+CORS(app)
 
-app = FastAPI(title=config.APP_NAME)
+complaints = []
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/")
+@app.route("/")
 def home():
-    return {"message": "Backend running 🚀"}
+    return {"message": "Backend running 🔥"}
 
+@app.route("/auth/login", methods=["POST"])
+def login():
+    return jsonify({
+        "message": "Login success",
+        "role": "citizen"
+    })
 
-app.include_router(auth.router, prefix="/auth")
-app.include_router(complaint.router, prefix="/complaint")
-app.include_router(sos.router, prefix="/sos")
-app.include_router(ai.router, prefix="/ai")
-app.include_router(employee.router, prefix="/employee")
+@app.route("/ai/chat", methods=["POST"])
+def chat():
+    data = request.json
+    message = data.get("message", "")
+
+    if "danger" in message.lower() or "help" in message.lower():
+        return jsonify({
+            "reply": "🚨 SOS triggered!"
+        })
+
+    complaint = {
+        "id": len(complaints) + 1,
+        "text": message,
+        "status": "Pending"
+    }
+
+    complaints.append(complaint)
+
+    return jsonify({
+        "reply": "✅ Complaint registered!"
+    })
+
+@app.route("/employee/dashboard")
+def dashboard():
+    return jsonify({
+        "complaints": complaints
+    })
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True)

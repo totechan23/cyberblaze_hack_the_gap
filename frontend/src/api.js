@@ -1,45 +1,17 @@
-const BASE_URL =
-  process.env.REACT_APP_API_BASE_URL ||
-  "https://scaling-space-fortnight-wrjwpg6w5gwq25qw-3000.app.github.dev/";
+const BASE_URL = "https://solid-spoon-g4wgj79gr579c9gpq-8000.app.github.dev";
 
-async function request(path, options = {}) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+export const sendMessage = async (message) => {
+  const res = await fetch(`${BASE_URL}/ai/chat`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {}),
     },
-    ...options,
+    body: JSON.stringify({ message }),
   });
+  return res.json();
+};
 
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.detail || data.message || "Request failed");
-  }
-  return data;
-}
-
-export const login = (payload) =>
-  request("/auth/login", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-
-export const processAI = (text) =>
-  request("/ai/process", {
-    method: "POST",
-    body: JSON.stringify({ text }),
-  });
-
-export const createComplaint = (payload) =>
-  request("/complaint/create", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-
-export const triggerSOS = (payload) =>
-  request("/sos/trigger", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-
-export const getDashboard = () => request("/employee/dashboard");
+export const getDashboard = async () => {
+  const res = await fetch(`${BASE_URL}/employee/dashboard`);
+  return res.json();
+};
