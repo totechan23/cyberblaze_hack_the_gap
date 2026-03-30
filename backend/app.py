@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config import config
 
-# 👇 ADD THIS
 from routes import auth, complaint, sos, ai, employee
 
 app = FastAPI(title=config.APP_NAME)
@@ -19,7 +18,7 @@ app.add_middleware(
 def home():
     return {"message": "Backend running 🚀"}
 
-# 👇 ADD THIS AT BOTTOM
+
 app.include_router(auth.router, prefix="/auth")
 app.include_router(complaint.router, prefix="/complaint")
 app.include_router(sos.router, prefix="/sos")
