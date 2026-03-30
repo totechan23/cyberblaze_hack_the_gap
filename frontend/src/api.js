@@ -1,54 +1,45 @@
-// frontend/src/api.js
+const BASE_URL =
+  process.env.REACT_APP_API_BASE_URL ||
+  "https://<my-codespace-url>-8000.app.github.dev";
 
-const BASE_URL = "http://127.0.0.1:8000";
-
-// ------------------ AUTH ------------------
-export const login = async (data) => {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+async function request(path, options = {}) {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
   });
-  return res.json();
-};
 
-// ------------------ AI ------------------
-export const processAI = async (text) => {
-  const res = await fetch(`${BASE_URL}/ai/process`, {
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.detail || data.message || "Request failed");
+  }
+  return data;
+}
+
+export const login = (payload) =>
+  request("/auth/login", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+export const processAI = (text) =>
+  request("/ai/process", {
+    method: "POST",
     body: JSON.stringify({ text }),
   });
-  return res.json();
-};
 
-// ------------------ COMPLAINT ------------------
-export const createComplaint = async (data) => {
-  const res = await fetch(`${BASE_URL}/complaint/create`, {
+export const createComplaint = (payload) =>
+  request("/complaint/create", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
-  return res.json();
-};
 
-export const getComplaints = async () => {
-  const res = await fetch(`${BASE_URL}/complaint/all`);
-  return res.json();
-};
-
-// ------------------ SOS ------------------
-export const triggerSOS = async (data) => {
-  const res = await fetch(`${BASE_URL}/sos/trigger`, {
+export const triggerSOS = (payload) =>
+  request("/sos/trigger", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
-  return res.json();
-};
 
-// ------------------ EMPLOYEE ------------------
-export const getDashboard = async () => {
-  const res = await fetch(`${BASE_URL}/employee/dashboard`);
-  return res.json();
-};
+export const getDashboard = () => request("/employee/dashboard");
