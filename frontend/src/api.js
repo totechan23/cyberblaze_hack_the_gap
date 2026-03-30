@@ -1,6 +1,6 @@
 const BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
-  "https://<my-codespace-url>-8000.app.github.dev";
+  "https://scaling-space-fortnight-wrjwpg6w5gwq25qw-3000.app.github.dev/";
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
